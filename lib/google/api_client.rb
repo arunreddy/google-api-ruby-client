@@ -555,6 +555,9 @@ module Google
       request.parameters['userIp'] ||= self.user_ip unless self.user_ip.nil?
 
       connection = options[:connection] || Faraday.default_connection
+
+      logger.info connection
+
       request.authorization = options[:authorization] || self.authorization unless options[:authenticated] == false
 
       result = request.send(connection)
@@ -564,6 +567,7 @@ module Google
           result = request.send(connection)
         rescue Signet::AuthorizationError
            # Ignore since we want the original error
+           logger.error "Autorization error"
         end
       end
       
